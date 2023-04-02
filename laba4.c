@@ -15,10 +15,10 @@ int main() {
     int n=pow(2,10);
     double h = 2./n;
     for(int i=0;i<=n;i++) {
-        I1+=func(x+i*h);
+        I1+=func(x+i*h/2);
     }
     for(int i=0;i<=n*2;i++) {
-        I2+=func(x+i*(h/2));
+        I2+=func(x+i*(h/4));
     }
     I1*=h; I2*=h/2;
     printf("%lf\t%lf", I1, I2);
