@@ -16,7 +16,7 @@ int main() {
     printf("\n   x          f(x)\n");
     printf("--------------------\n");
     
-    while(x<=1) {
+    while(x<=1.00001) {
         printf("%.6lf   %.6lf\n",x, func(x));
         x+=h;
     }
