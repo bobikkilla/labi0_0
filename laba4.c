@@ -2,7 +2,7 @@
 #include <math.h>
 
 double func(double a) {
-    if(a>=0 && a<=1) return cos(a*M_PI/180)*exp(pow(-a,2));
+    if(a>=0 && a<=1) return cos(a)*exp(-pow(a,2));
     else if(a>1 && a<=2) return log(a+1)-sqrt(4-pow(a,2));
     else return 0.0;
 }
