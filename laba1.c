@@ -13,7 +13,7 @@ int main() {
         if ((min <= x) && ((min % 7) == 0)) {
             printf("%d\n", min);
             }
-        printf("%.2lf", (float)min/((float)b+(float)c));
+        else { printf("%.2lf", (float)min/((float)b+(float)c)); }
         return 0;
         }
        
@@ -22,13 +22,13 @@ int main() {
         if ((min <= x) && ((min % 7) == 0)) {
             printf("%d\n", min);
             }
-        printf("%.3lf ", (float)min/((float)b+(float)c));
+        else { printf("%.3lf ", (float)min/((float)b+(float)c)); }
         return 0;
         }
    
     if ((min <= x) && ((min % 7) == 0)) {
         printf("%d\n", min);
         }
-        printf("%.2lf", (float)min/((float)b+(float)c));
+        else { printf("%.2lf", (float)min/((float)b+(float)c)); }
     return 0;
 }
