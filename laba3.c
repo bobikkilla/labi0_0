@@ -2,7 +2,7 @@
 #include <math.h>
 
 double func(double a) {
-    return cos(a*M_PI/180)*exp(pow(-a,2));
+    return cos(a*M_PI/180)*exp(-pow(a,2));
 }
 
 double func1(double a) {
@@ -10,21 +10,20 @@ double func1(double a) {
 }
 
 int main() {
-    double h=0, x=0;
+    double h=0;
+    int count = 0;
     printf("shag X h=");
     scanf("%lf", &h);
     printf("\n   x          f(x)\n");
     printf("--------------------\n");
-    
-    while(x<=1.00001) {
-        printf("%.6lf   %.6lf\n",x, func(x));
-        x+=h;
+
+    while(count<=(1/h)) {
+        printf("%.6lf   %.6lf\n",count*h, func(count*h));
+        count++;
     }
-    
-    for(double i=x;i<=2;i+=h) {
-        printf("%.6lf   %.6lf\n", i, func1(i));
+
+    for(count; count<=(2/h);count++) {
+        printf("%.6lf   %.6lf\n", count*h, func1(count*h));
     }
-    printf("%.6lf   %.6lf\n", 2.000000, func1(2));
-  
     return 0;
 }
