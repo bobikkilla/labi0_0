@@ -7,31 +7,25 @@ double func(double a) {
     else return 0.0;
 }
 
-double runge(double a, double b) { 
+double runge(double a, double b) {
     return (a-b)/3;
 }
 
 int main() {
-    double eps;
+    double eps=0;
     printf("Print innacuracy max rate -> ");
     scanf("%lf", &eps);
-    
-    double x=0, I1=0, I2=0;
-    for(int i=0;i<=30;i++){
-        long int n=pow(2,i);
+
+    double x=0, I1=0, I2=0,i=0;
+    do {
+        long int n = pow(2,i);
         double h = 2./n;
-        
-        for(int i=0;i<=n;i++) {
-            I1+=func(x+i*h/2);
-        }
-        
         for(int i=0;i<=n*2;i++) {
+            if(i<=n) I1+=func(x+i*h/2);
             I2+=func(x+i*(h/4));
         }
-        I1*=h; I2*=h/2;
-        
+        I1*=h; I2*=h/2; i++;
         printf("if n = %ld, runge innacuracy = %.7lf, I= %.7lf\n", n,  runge(I1,I2),I2);
-        if(runge(I1,I2)<eps) return 0;
-    }
+    } while(runge(I1,I2)>eps);
     return 0;
 }
