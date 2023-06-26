@@ -13,24 +13,26 @@ int mygetch()
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     c = getchar();
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+        if((c > 0x3A && c <= 0x53) && (c!=0x49))  return '\0';
     return c;
 }
 
 int main() {
-    int count=0;
-    while (1 == 1) {
+    int count = 0;
+    while (1) {
         char a = mygetch();
-        if(isalpha(a)) {
+        if (isalpha(a)) {
             printf("%c", a);
             count++;
-            continue;
         }
-        else if (a == 27) { //esc
-            a = getchar(); // 2 symb
-            if (a == '[') { //skobka na klave
-                a = getchar(); // 3 symb
-                if (a == '5') { // 3 symb = 5
-                    break; // eto pageup
+        else if (a == 27) { // esc
+            a = mygetch(); // 2 символ
+            if (a == '[') { // скобка на клаве
+                a = mygetch(); // 3 символ
+                if (a == '5') { // 3 символ = 5
+                    printf("\n");
+                    printf("Количество введенных букв: %d\n", count);
+                    return 0; // это PageUp
                 }
                 else {
                     ungetc(a, stdin);
@@ -40,9 +42,6 @@ int main() {
                 ungetc(a, stdin);
             }
         }
-        else continue;
     }
-    printf("\n");
-    printf("kolichestvo vvedennih bukv %d\n", count);
     return 0;
 }
