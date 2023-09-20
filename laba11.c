@@ -17,39 +17,72 @@ typedef struct {
 int num_friends = 0;
 Friend friends[MAX_FRIENDS];
 
+void read_from_file() {
+    FILE *file = fopen("friends.txt", "r");
+    if (file == NULL) {
+        printf("Empty\n");
+        return;
+    }
+    while (fscanf(file, "%s %s %s %d %d %d %s %s",
+           friends[num_friends].surname,
+           friends[num_friends].name,
+           friends[num_friends].otch,
+           &friends[num_friends].day,
+           &friends[num_friends].month,
+           &friends[num_friends].year,
+           friends[num_friends].address,
+           friends[num_friends].phone) == 8) {
+        num_friends++;
+    }
+    fclose(file);
+}
+
+void write_to_file() {
+    FILE *file = fopen("friends.txt", "w");
+    for (int i = 0; i < num_friends; i++) {
+        fprintf(file, "%s %s %s %d %d %d %s %s\n",
+                friends[i].surname,
+                friends[i].name,
+                friends[i].otch,
+                friends[i].day,
+                friends[i].month,
+                friends[i].year,
+                friends[i].address,
+                friends[i].phone);
+    }
+    fclose(file);
+}
+
 void add_friend() {
     if (num_friends >= MAX_FRIENDS) {
-        printf("Список друзей полон\n");
+        printf("List is full\n");
         return;
     }
     Friend friend;
-    printf("Введите фамилию друга -> ");
+    printf("Surname -> ");
     scanf("%s", friend.surname);
-    printf("Введите имя друга -> ");
+    printf("Name -> ");
     scanf("%s", friend.name);
-    printf("Введите отчество друга -> ");
+    printf("Patronymic-> ");
     scanf("%s", friend.otch);
-    printf("Введите день рождения -> ");
+    printf("Birth day -> ");
     scanf("%d", &friend.day);
-    printf("Введите месяц рождения -> ");
+    printf("Birth month -> ");
     scanf("%d", &friend.month);
-    printf("Введите год рождения -> ");
+    printf("Birth year -> ");
     scanf("%d", &friend.year);
-    printf("Введите адрес друга -> ");
+    printf("Address -> ");
     scanf("%s", friend.address);
-    printf("Введите телефон друга -> ");
+    printf("Phone number -> ");
     scanf("%s", friend.phone);
     friends[num_friends++] = friend;
-    FILE *file = fopen("friends.txt", "a");
-    fprintf(file, "%s %s %s %d %d %d %s %s\n", friend.surname, friend.name, friend.otch,
-            friend.day, friend.month, friend.year, friend.address, friend.phone);
-    fclose(file);
-    printf("Друг добавлен в список\n");
+    write_to_file();
+    printf("Friend added!\n");
 }
 
 void remove_friend() {
     char name[50];
-    printf("Введите имя друга для удаления -> ");
+    printf("Enter friend's name to delete -> ");
     scanf("%s", name);
     int i;
     for (i = 0; i < num_friends; i++) {
@@ -58,88 +91,95 @@ void remove_friend() {
         }
     }
     if (i == num_friends) {
-        printf("Друг не найден в списке\n");
+        printf("No matches\n");
         return;
     }
     for (int j = i; j < num_friends - 1; j++) {
         friends[j] = friends[j + 1];
     }
     num_friends--;
-    FILE *file = fopen("friends.txt", "w");
-    for (int j = 0; j < num_friends; j++) {
-        Friend friend = friends[j];
-        fprintf(file, "%s %s %s %d %d %d %s %s\n", friend.surname, friend.name, friend.otch, friend.day, friend.month, friend.year, friend.address, friend.phone);
-    }
-    fclose(file);
-    printf("Друг удален из списка\n");
+    write_to_file();
+    printf("Deleted\n");
 }
 
 void list_friends() {
-    FILE *file = fopen("friends.txt", "r");
-    if (file == NULL) {
-        printf("Список друзей пуст\n");
+    if (num_friends == 0) {
+        printf("Empty\n");
         return;
     }
-    char surname[50], name[50], otch[50], address[100], phone[20];
-    int day, month, year;
-    printf("Список друзей:\n");
-    while (fscanf(file, "%s %s %s %d %d %d %s %s", surname, name, otch, &day, &month, &year, address, phone) == 8) {
-        printf("%s %s %s, %d.%d.%d, %s, %s\n", surname, name, otch, day, month, year, address, phone);
-    }
-    fclose(file);
-    if (num_friends == 0) {
-        printf("Список друзей пуст\n");
+    printf("Friend's list:\n");
+    for (int i = 0; i < num_friends; i++) {
+        printf("%s %s %s, %d.%d.%d, %s, %s\n",
+               friends[i].surname,
+               friends[i].name,
+               friends[i].otch,
+               friends[i].day,
+               friends[i].month,
+               friends[i].year,
+               friends[i].address,
+               friends[i].phone);
     }
 }
 
 void find_friends_by_month(int month) {
-    FILE *file = fopen("friends.txt", "r");
-    if (file == NULL) {
-        printf("Список друзей пуст\n");
-        return;
-    }
     if (month <= 0 || month >= 13) {
-        printf("Номер месяца введён неверно.\n");
-        fclose(file);
+        printf("Month is wrong!\n");
         return;
     }
-    char mon_str[3];
-    sprintf(mon_str, "%02d", month);  // переводим номер месяца в строку
-    char surname[50], name[50], otch[50], address[100], phone[20];
-    int day, m, year;
     int found_friends = 0;
-    while (fscanf(file, "%s %s %s %d %d %d %s %s", surname, name, otch, &day, &m, &year, address, phone) == 8) {
-        if (m == month) {
-            printf("%s %s %s, %d.%d.%d, %s, %s\n", surname, name, otch, day, m, year, address, phone);
+    printf("Friends born in month %d:\n", month);
+    for (int i = 0; i < num_friends; i++) {
+        if (friends[i].month == month) {
+            printf("%s %s %s, %d.%d.%d, %s, %s\n",
+                   friends[i].surname,
+                   friends[i].name,
+                   friends[i].otch,
+                   friends[i].day,
+                   friends[i].month,
+                   friends[i].year,
+                   friends[i].address,
+                   friends[i].phone);
             found_friends++;
         }
     }
-    fclose(file);
     if (found_friends == 0) {
-        printf("Друзья, родившиеся в этом месяце, не найдены\n");
+        printf("Not found\n");
     }
 }
 
 int main() {
-    int act;
-        printf("1 - Добавить друга\n");
-        printf("2 - Удалить друга\n");
-        printf("3 - Список друзей\n");
-        printf("4 - Поиск друзей по месяцу рождения\n");
-        printf("Выберите действие -> ");
-        scanf("%d", &act);
-        switch (act) {
-            case 1: add_friend(); break;
-            case 2: remove_friend(); break;
-            case 3: list_friends(); break;
+    read_from_file();
+
+    while (1) {
+        int choice, month;
+        printf("1. List all friends\n");
+        printf("2. Add a friend\n");
+        printf("3. Remove a friend\n");
+        printf("4. Find friends by month\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                list_friends();
+                break;
+            case 2:
+                add_friend();
+                break;
+            case 3:
+                remove_friend();
+                break;
             case 4:
-                int month;
-                printf("Введите номер месяца для поиска(в формате 1,2,3...11,12) -> ");
+                printf("Enter a month: ");
                 scanf("%d", &month);
                 find_friends_by_month(month);
                 break;
+            case 5:
+                return 0;
             default:
-                printf("Неверный выбор\n");
+                printf("Invalid choice\n");
         }
-    return 0;
+        printf("\n");
+    }
 }
